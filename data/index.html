@@ -1,0 +1,50 @@
+<!DOCTYPE HTML><html>
+<head>
+  <title>UV Stand </title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="icon" href="data:,">
+  <link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body>
+  <div id="particles-js"></div>
+  
+  <div class="panel">
+    <h2>UV Stand</h2>
+    <form class="form-inline" action="/start">
+      <fieldset>
+        <legend>[ Options ]</legend>  
+        <div>
+          <label for="mode">Mode </label>
+          <select id="mode" name="mode">
+            <option value="G1">2 Lamps</option>
+            <option value="G2">4 Lambs</option>
+            <option value="3">6 Lambs</option>
+          </select>
+        </div> 
+
+        <label for="interval">Time </label>
+        <select id="interval" name="interval">
+          <option value="5">5 Mints</option>
+          <option value="10">10 Mints</option>
+          <option value="15">15 Mints</option>
+          <option value="20">20 Mints</option>
+          <option value="25">25 Mints</option>
+          <option value="30">30 Mints</option>
+        </select>
+
+        <label for="alarm">Alarm </label>
+        <select id="alarm" name="alarm">
+          <option value="off">Off</option>
+          <option value="on">On</option>
+        </select>
+
+        <input type="submit" value="Start">
+      </fieldset>
+    </form>
+    
+  </div>
+
+  <script type="text/Javascript" src="particles.min.js"></script>
+  <script type="text/Javascript" src="script.js"></script>
+</body>
+</html>
