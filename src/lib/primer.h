@@ -67,7 +67,7 @@ void Route(){
         {
           OP_Zero.alarm = false;
         }
-        OP_Zero.time = interval.toInt();
+        OP_Zero.time = interval.toInt()*60;
 
         xTaskCreatePinnedToCore(RemoteHandle, "Main Loop", 10000, &OP_Zero,2, &Main_Handle, 1);
       }
@@ -83,7 +83,7 @@ void Route(){
         {
           OP_Zero.alarm = false;
         }
-        OP_Zero.time = interval.toInt();
+        OP_Zero.time = interval.toInt()*60;
         
         xTaskCreatePinnedToCore(RemoteHandle, "Main Loop", 10000, &OP_Zero,2, &Main_Handle, 1);
       }
@@ -99,13 +99,10 @@ void Route(){
         {
           OP_Zero.alarm = false;
         }
-        OP_Zero.time = interval.toInt();
+        OP_Zero.time = interval.toInt()*60;
         
         xTaskCreatePinnedToCore(RemoteHandle, "Main Loop", 10000, &OP_Zero,2, &Main_Handle, 1);
-      }
-      
-      
-    
+      }    
     }
     request->send(200, "text/plain", "OK");
   });

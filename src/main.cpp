@@ -12,16 +12,10 @@ void setup() {
     return;
   }
 
-  
-
-  
-  Motion_Operation = xSemaphoreCreateMutex();
   CT_Operation = xSemaphoreCreateMutex();
   Motion_Detected = xSemaphoreCreateMutex();
 
-  
   xTaskCreatePinnedToCore(CT_Loop, "CT Loop", 10000, &CT,1, &CT_Handle, 1);
-
 
   Setup_Wifi(ssid, pass);
   Route();

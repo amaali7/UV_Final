@@ -142,3 +142,6 @@ particlesJS('particles-js',
 
 
 
+// Progress Bar
+
+$('.bar').width('80%');

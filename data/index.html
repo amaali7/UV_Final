@@ -10,7 +10,7 @@
   
   <div class="panel">
     <h2>UV Stand</h2>
-    <form class="form-inline" action="/start">
+    <form class="form-inline sec" action="/start">
       <fieldset>
         <legend>[ Options ]</legend>  
         <div>
@@ -20,25 +20,29 @@
             <option value="G2">4 Lambs</option>
             <option value="3">6 Lambs</option>
           </select>
+          <label for="interval">Time </label>
+          <select id="interval" name="interval">
+            <option value="5">5 Mints</option>
+            <option value="10">10 Mints</option>
+            <option value="15">15 Mints</option>
+            <option value="20">20 Mints</option>
+            <option value="25">25 Mints</option>
+            <option value="30">30 Mints</option>
+          </select>
+
+          <label for="alarm">Alarm </label>
+          <select id="alarm" name="alarm">
+            <option value="off">Off</option>
+            <option value="on">On</option>
+          </select>
         </div> 
 
-        <label for="interval">Time </label>
-        <select id="interval" name="interval">
-          <option value="5">5 Mints</option>
-          <option value="10">10 Mints</option>
-          <option value="15">15 Mints</option>
-          <option value="20">20 Mints</option>
-          <option value="25">25 Mints</option>
-          <option value="30">30 Mints</option>
-        </select>
+        
 
-        <label for="alarm">Alarm </label>
-        <select id="alarm" name="alarm">
-          <option value="off">Off</option>
-          <option value="on">On</option>
-        </select>
-
-        <input type="submit" value="Start">
+        
+        <div class="contaner">
+          <input type="submit" value="Start" class="buttonX">
+        </div>
       </fieldset>
     </form>
     
