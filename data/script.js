@@ -144,4 +144,16 @@ particlesJS('particles-js',
 
 // Progress Bar
 
-$('.bar').width('80%');
+var loadingBar = 200;
+
+function animationBarOne(){    
+    var elements = document.getElementsByClassName("growing-bar");
+    for (var i = 0; i < elements.length; i++) {
+        elements[i].style.width=(loadingBar+"px");
+    }
+    loadingBar++;
+    if(loadingBar === 900){
+         clearInterval(intervalId);
+    }
+}
+var intervalId = setInterval(animationBarOne,1);

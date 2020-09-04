@@ -15,7 +15,10 @@ void setup() {
   CT_Operation = xSemaphoreCreateMutex();
   Motion_Detected = xSemaphoreCreateMutex();
 
-  xTaskCreatePinnedToCore(CT_Loop, "CT Loop", 10000, &CT,1, &CT_Handle, 1);
+  xTaskCreatePinnedToCore(CT_Loop, "CT Loop", 10000, NULL,1, &CT_Handle, 1);
+  xTaskCreatePinnedToCore(Motion_Loop, "Motion Loop", 10000,NULL,2, &Motion_Handle, 1);
+  vTaskSuspend(Motion_Handle);
+  delay(5000);
 
   Setup_Wifi(ssid, pass);
   Route();

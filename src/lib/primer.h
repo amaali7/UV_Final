@@ -54,7 +54,7 @@ void Route(){
       interval = request->getParam(PARAM_INPUT_2)->value();
       alarm = request->getParam(PARAM_INPUT_3)->value();
       // todo some
-      
+      Serial.println("Mode : "+mode+" Interval : "+interval+" Alarm : "+alarm);
       if (mode == "G1")
       {
         Data_t OP_Zero;
@@ -69,7 +69,8 @@ void Route(){
         }
         OP_Zero.time = interval.toInt()*60;
 
-        xTaskCreatePinnedToCore(RemoteHandle, "Main Loop", 10000, &OP_Zero,2, &Main_Handle, 1);
+        xTaskCreatePinnedToCore(RemoteHandle, "Main Loop", 10000, &OP_Zero,2, &RemoteHandler_t, 1);
+        Serial.println("Group 1 : - Mode : "+String(OP_Zero.group)+" Interval : "+String(OP_Zero.time)+" Alarm : "+String(OP_Zero.alarm));
       }
       else if (mode == "G2")
       {
@@ -85,7 +86,8 @@ void Route(){
         }
         OP_Zero.time = interval.toInt()*60;
         
-        xTaskCreatePinnedToCore(RemoteHandle, "Main Loop", 10000, &OP_Zero,2, &Main_Handle, 1);
+        xTaskCreatePinnedToCore(RemoteHandle, "Main Loop", 10000, &OP_Zero,1, &RemoteHandler_t, 1);
+        Serial.println("Group 2 : - Mode : "+String(OP_Zero.group)+" Interval : "+String(OP_Zero.time)+" Alarm : "+String(OP_Zero.alarm));
       }
       else if (mode == "G3")
       {
@@ -101,7 +103,8 @@ void Route(){
         }
         OP_Zero.time = interval.toInt()*60;
         
-        xTaskCreatePinnedToCore(RemoteHandle, "Main Loop", 10000, &OP_Zero,2, &Main_Handle, 1);
+        xTaskCreatePinnedToCore(RemoteHandle, "Main Loop", 10000, &OP_Zero,2, &RemoteHandler_t, 1);
+        Serial.println("Group 3 : - Mode : "+String(OP_Zero.group)+" Interval : "+String(OP_Zero.time)+" Alarm : "+String(OP_Zero.alarm));
       }    
     }
     request->send(200, "text/plain", "OK");

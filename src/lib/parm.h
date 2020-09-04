@@ -28,17 +28,16 @@ int CT[3] = {16, 17, 18};
 int AlarmPin = 10;
 int MainLock = 15;
 
-int G1[2] = {16,17};
-int G2[4] = {16, 17, 18, 19};
-int G3[6] = {16,17, 18, 19, 22, 23};
+int G1[2] = {2,17};
+int G2[4] = {2, 17, 18, 19};
+int G3[6] = {2,17, 18, 19, 22, 23};
 
-SemaphoreHandle_t Motion_Operation;
 SemaphoreHandle_t Motion_Detected;
 SemaphoreHandle_t CT_Operation;
 
 TaskHandle_t Motion_Handle;
 TaskHandle_t CT_Handle;
-TaskHandle_t Main_Handle;
+
 
 size_t totalCycle = 0;
 xTaskHandle RemoteHandler_t;
@@ -146,7 +145,10 @@ void RelayGroup(int group[], bool state){
   {
     for (int i = 0; i < sizeof(group); i++)
     {
-      digitalWrite(group[i],HIGH);
+      if (group[i]!=0)
+      {
+        digitalWrite(group[i],HIGH);
+      }     
     }
     
   }
@@ -154,7 +156,10 @@ void RelayGroup(int group[], bool state){
   {
     for (int i = 0; i < sizeof(group); i++)
     {
-      digitalWrite(group[i],LOW);
+      if (group[i]!=0)
+      {
+        digitalWrite(group[i],LOW);
+      }
     }
   }  
 }
