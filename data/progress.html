@@ -1,45 +1,43 @@
-<!DOCTYPE HTML><html>
+<!DOCTYPE html>
+<html>
 <head>
   <title>UV Stand </title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="icon" href="data:,">
-  
+  <link rel="stylesheet" type="text/css" href="normalize.css"> 
   <link rel="stylesheet" type="text/css" href="style.css">
-
-
 </head>
 <body>
-  <div id="particles-js"></div>
-    
+  <div id="particles-js"></div> 
   <div class="panel" >
-    
-        <h2>UV Stand</h2>
-            <div class="chart sec" >
-                <div class="bar bar-75 cyan">
-                    <div class="face top">
-                        <div class="growing-bar"></div>
-                        10 Mints
-                    </div>
-                    <div class="face side-0">
-                        <div class="growing-bar"></div>
-                    </div>
-                    <div class="face floor">
-                        <div class="growing-bar"></div>
-                    </div>
-                    <div class="face side-a"></div>
-                    <div class="face side-b"></div>
-                    <div class="face side-1">
-                        <div class="growing-bar"></div>
-                    </div>
-                </div>
+    <h2>UV Stand</h2>
+    <div class="chart sec" >
+        <div class="bar bar-75 cyan">
+            <div class="face top">
+                <div class="growing-bar"></div>
+                <h5 id="progress"></h5>
             </div>
-
-        <div class="contaner">
-            <button class="buttonX">Stop</button>
+            <div class="face side-0">
+                <div class="growing-bar"></div>
+            </div>
+            <div class="face floor">
+                <div class="growing-bar"></div>
+            </div>
+            <div class="face side-a"></div>
+            <div class="face side-b"></div>
+            <div class="face side-1">
+                <div class="growing-bar"></div>
+            </div>
         </div>
+    </div>
+    <div class="contaner">
+        <a  class="buttonX" href="/stop_now?KillNow=Stop">Stop</a>
+    </div>
   </div>
-
   <script type="text/Javascript" src="particles.min.js"></script>
   <script type="text/Javascript" src="script.js"></script>
+  <script>
+     var id = setInterval(move, 50);
+  </script>
 </body>
 </html>

@@ -1,11 +1,3 @@
-function toggleCheckbox(element) {
-    var xhr = new XMLHttpRequest();
-    if(element.checked){ xhr.open("GET", "/update?output="+element.id+"&state=1", true); }
-    else { xhr.open("GET", "/update?output="+element.id+"&state=0", true); }
-    xhr.send();
-  }
-
-
 /* -----------------------------------------------
 /* How to use? : Check the GitHub README
 /* ----------------------------------------------- */
@@ -141,19 +133,27 @@ particlesJS('particles-js',
 );
 
 
-
-// Progress Bar
-
-var loadingBar = 200;
-
-function animationBarOne(){    
-    var elements = document.getElementsByClassName("growing-bar");
-    for (var i = 0; i < elements.length; i++) {
-        elements[i].style.width=(loadingBar+"px");
-    }
-    loadingBar++;
-    if(loadingBar === 900){
-         clearInterval(intervalId);
-    }
+var pers = 0;
+var elements = document.getElementsByClassName("growing-bar");
+function move() {
+  if (pers >= 100) {
+    clearInterval(id);
+    window.location.replace("/");
+  } else {
+    fetch('/op_state').then(data=>{return data.text()}).then(res=>{
+      keyss = res.split(':')
+        pers = (keyss[0]/keyss[1])*100;
+        for (var i = 0; i < elements.length; i++) {
+          
+          elements[i].style.width=(pers+"%");
+          
+        }
+        if (pers == NaN) {
+          document.getElementById("progress").innerHTML = "Connection fail !!";
+        }
+        else{
+          document.getElementById("progress").innerHTML = Math.floor(pers)+"%";
+        }
+    })
+  }
 }
-var intervalId = setInterval(animationBarOne,1);

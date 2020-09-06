@@ -172,7 +172,7 @@ START // CHART'S RULES
 .growing-bar {
   transition: all 0.3s ease-in-out;
   background-color: rgba(236, 0, 140, 0.6);
-  width: 40%;
+  width: 0%;
   height: 2em; }
 
 
