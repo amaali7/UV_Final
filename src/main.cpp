@@ -1,5 +1,5 @@
 #include <Arduino.h>
-#include "lib/junction.h"
+#include "libs/webInterface.h"
 
 /****************************************************************\
         -: Pin Map :-
@@ -10,11 +10,15 @@
 
       Groups :-
     
-    G1 = 5 , G2 = 17 , G3 16
+    G1 = 23 , G2 = 4 , G3 = 2
+
+      Motion Sensors :-
+    
+    MS1 = 34 , MS2 = 39 , MS3 = 36
 
       CT Sensors :-
 
-    CT1 = 33 , CT2 = 32 , CT3 = 35
+    CT1 = 32 , CT2 = 33 , CT3 = 35
 
       Main Lock :-
     
@@ -22,11 +26,7 @@
 
       Alarm :-
     
-    AL = 23
-
-      Motion Sensors :-
-    
-    MS1 = 1 , MS2 = 3 , MS3 = 19
+    AL = 5
 
       RTC Module :-
 
@@ -35,30 +35,58 @@
 \*****************************************************************/
 
 
-char ssid[] = "Network-1";          //  your network SSID (name) 
-char pass[] = "kdefdjrgvfdj";
-
 void setup() {
+  // put your setup code here, to run once:
+
+  pinMode(Group1,OUTPUT);
+  pinMode(Group2,OUTPUT);
+  pinMode(Group3,OUTPUT);
+
+  pinMode(Lamp1,OUTPUT);
+  pinMode(Lamp2,OUTPUT);
+  pinMode(Lamp3,OUTPUT);
+  pinMode(Lamp4,OUTPUT);
+  pinMode(Lamp5,OUTPUT);
+  pinMode(Lamp6,OUTPUT);
+
+  pinMode(MS1,INPUT_PULLUP);
+  pinMode(MS2,INPUT_PULLUP);
+  pinMode(MS3,INPUT_PULLUP);
+
+  pinMode(MainLock,OUTPUT);
+  pinMode(Alarm,OUTPUT);
+
   Serial.begin(9600);
+
+  if (! rtc.begin()) {
+    Serial.println("Couldn't find RTC");
+    while (1);
+  }
+
+  if (rtc.lostPower()) {
+    Serial.println("RTC lost power, lets set the time!");
+    rtc.adjust(DateTime(2020, 11, 7, 11, 27, 50));
+  }
+
+  OperationStartAt = rtc.now();
 
   if(!SPIFFS.begin(true)){
     Serial.println("An Error has occurred while mounting SPIFFS");
     return;
   }
-
+  CheckLampsLifeTime();
   Motion_Detected = xSemaphoreCreateMutex();
 
-  xTaskCreatePinnedToCore(CT_Loop, "CT Loop", 10000, NULL,5, &CT_Handle, 1);
+  xTaskCreatePinnedToCore(CT_Loop, "CT Loop", 10000, NULL,2, &CT_Handle, 1);
   xTaskCreatePinnedToCore(Motion_Loop, "Motion Loop", 10000,NULL,2, &Motion_Handle, 1);
   vTaskSuspend(Motion_Handle);
-  delay(5000);
 
   Setup_Wifi(ssid, pass);
   Route();
-}
 
+}
 
 void loop() {
+  // put your main code here, to run repeatedly:
   delay(portMAX_DELAY);
 }
-
