@@ -1,6 +1,5 @@
 # UV_Final
 
-
 /****************************************************************\
         -: Pin Map :-
 
@@ -10,11 +9,15 @@
 
       Groups :-
     
-    G1 = 5 , G2 = 17 , G3 16
+    G1 = 23 , G2 = 4 , G3 = 2
+
+      Motion Sensors :-
+    
+    MS1 = 34 , MS2 = 39 , MS3 = 36
 
       CT Sensors :-
 
-    CT1 = 33 , CT2 = 32 , CT3 = 35
+    CT1 = 32 , CT2 = 33 , CT3 = 35
 
       Main Lock :-
     
@@ -22,11 +25,7 @@
 
       Alarm :-
     
-    AL = 23
-
-      Motion Sensors :-
-    
-    MS1 = 1 , MS2 = 3 , MS3 = 19
+    AL = 5
 
       RTC Module :-
 
