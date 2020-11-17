@@ -220,7 +220,8 @@ void CT_Loop(void * parameters){
 void Alarm_Loop(void * parm){
   
   while (true)
-  {  
+  { 
+    delay(1000);
     ledcWriteTone(0, 5000);
     delay(1000);
     ledcWriteTone(0, 0);

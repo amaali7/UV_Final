@@ -265,8 +265,4 @@ String GroupFinder(int Groups[3]){
   return data;  
 }
 
-void SoundAlarm(){
-
-}
-
 #endif
