@@ -48,6 +48,7 @@ void KillSwitch(){
   // xSemaphoreTake( Motion_Detected, ( TickType_t ) portMAX_DELAY );
   vTaskDelete(RemoteHandler_t);
   vTaskSuspend(Motion_Handle);
+  
   // xSemaphoreGive( Motion_Detected );
   detachInterrupt(digitalPinToInterrupt(MS1));
   // detachInterrupt(digitalPinToInterrupt(MS2));
@@ -70,6 +71,7 @@ void KillSwitch(){
   OperationOnline = false;
   SaveLog(Op_ID,ReturnDateTime(OperationStartAt),"G"+String(OP_Zero.group),totalCycle,'R');
   SaveOperationID(Op_ID);
+  motionStatus = "motionStop";
 }
 
 void CheckLampsLifeTime(){

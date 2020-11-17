@@ -232,16 +232,41 @@ void GroupSwitch(size_t group, bool state){
 
 // Checks if motion was detected, sets LED HIGH and starts a timer
 void IRAM_ATTR detectsMovement() {
-  if(!startTimer ) {
-      
-      startTimer = true;
-      controller = true;
-      lastTrigger = millis();
+  if(!startTimer ) {   
+    startTimer = true;
+    controller = true;
+    motionStatus = "motionDetected";
+    lastTrigger = millis();
+  }
+  else
+  {   
+    Serial.println("TimeTrigger Updated .");
+    lastTrigger = millis();
+  }
+}
+
+struct CT_State_t CTS_State(){
+  struct CT_State_t tempo;
+  tempo.ct1 = int(CTS1.getCurrentAC(60));
+  tempo.ct2 = int(CTS2.getCurrentAC(60));
+  tempo.ct3 = int(CTS3.getCurrentAC(60));
+  return tempo;
+}
+
+String GroupFinder(int Groups[3]){
+  String data = "";
+  for (int i = 0; i < 3; i++)
+  {
+    if (Groups[i]==1)
+    {
+      data = data + "-" + String(i+1);
     }
-    else
-    {   
-      Serial.println("No Way O_O ");
-    }
+  }
+  return data;  
+}
+
+void SoundAlarm(){
+
 }
 
 #endif

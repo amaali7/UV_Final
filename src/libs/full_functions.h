@@ -22,7 +22,11 @@ void RemoteHandle(void* parameters){
   // Serial.println("Current Gruop : G"+String(parm->group)+" Time Interval : "+String(parm->time)+" Alarm State : "+String(parm->alarm) );
   if (parm->alarm)
   {
+    vTaskResume(Alarm_Handle);
     digitalWrite(Alarm,HIGH);
+    delay(10000);
+    vTaskSuspend(Alarm_Handle);
+    ledcWriteTone(0, 0);
   }
   bool firstState = true;
   Op_ID = ReadOpertionID()+1;
@@ -67,6 +71,7 @@ void RemoteHandle(void* parameters){
   }
   GroupSwitch(parm->group,false);
   digitalWrite(MainLock,LOW);
+  motionStatus = "motionStop";
   // Serial.println("Operation Complete ^_^");
   SaveLog(Op_ID,ReturnDateTime(OperationStartAt),"G"+String(parm->group+1),totalCycle,'R');
   SaveOperationID(Op_ID);
@@ -93,6 +98,7 @@ void Motion_Loop(void * parm){
       {
         xSemaphoreTake( Motion_Detected, ( TickType_t ) portMAX_DELAY );
         digitalWrite(MainLock, HIGH);
+        vTaskResume(Alarm_Handle);
         Serial.println("MOTION DETECTED interrpts Start");
         controller = false;
       }
@@ -101,6 +107,9 @@ void Motion_Loop(void * parm){
       Serial.println("Motion stopped interrpts End");
       digitalWrite(MainLock, LOW);
       startTimer = false;
+      motionStatus = "motionStop";
+      vTaskSuspend(Alarm_Handle);
+      ledcWriteTone(0, 0);
       xSemaphoreGive( Motion_Detected );
     }
     vTaskDelay(10);
@@ -110,27 +119,114 @@ void Motion_Loop(void * parm){
 
 
 void CT_Loop(void * parameters){
-   
+  int group[3] ;
+  // Operation State refare to start end wating
+  /*
+    
+    start      = 0
+    opertating = 1
+    end        = 2
+    wating     = 3
+  */
+  size_t watingTime = 0;
+  size_t OperationState = 2;
+  struct CT_State_t ct_cache;
   while (true)  
   { 
-
-    if( xSemaphoreTake( Motion_Detected, ( TickType_t ) portMAX_DELAY ) == pdTRUE )
+    totalCycle = 0;
+    // if current detected start operation
+    ct_cache = CTS_State();
+    if (ct_cache.ct1 == 1 || ct_cache.ct2 == 1 || ct_cache.ct3 == 1 )
     {
-      delay(1000);
-      Serial.println("Current Detected  .......");
-      xSemaphoreGive( Motion_Detected );
+      if (ct_cache.ct1 > 0)
+      {
+        group[0]=1;
+        OperationState = 0;
+      }
+      else
+      {
+        group[0]=0;
+      }
+      
+      if (ct_cache.ct2 > 0)
+      {
+        group[1]=1;
+        OperationState = 0;
+      }
+      else
+      {
+        group[1]=0;
+      }
+      if (ct_cache.ct3 > 0)
+      {
+        group[2]=1;
+        OperationState = 0;
+      }
+      else
+      {
+        group[2]=0;
+      }
     }
-    else
+     
+    if (OperationState == 0)
     {
-      Serial.println("No Current Detected  .......");
-      vTaskDelay(10); 
+      // group that detect current
+      digitalWrite(Alarm,HIGH);
+      OperationState = 1;
       Op_ID = ReadOpertionID()+1;
-      SaveLog(Op_ID,ReturnDateTime(OperationStartAt),"G1",totalCycle*1000,'R');
+      OperationStartAt = rtc.now();
+    }
+    
+    while (OperationState == 1)
+    {
+      // delay(1000);
+      
+      ct_cache = CTS_State();
+      if (ct_cache.ct1 == 1 || ct_cache.ct2 == 1 || ct_cache.ct3 == 1 )
+      {
+        if( xSemaphoreTake( Motion_Detected, ( TickType_t ) portMAX_DELAY ) == pdTRUE )
+        {
+          delay(1000);
+          ++totalCycle;
+          xSemaphoreGive( Motion_Detected );
+          watingTime = 0;
+        }
+      }
+      else
+      {
+        // OperationState = 1;
+        delay(1000);
+        ++watingTime;
+      }
+      if (watingTime > 5)
+      {
+        break;
+        OperationState  = 2;
+      }
+
+    }
+    if(OperationState == 2)
+    {
+      SaveLog(Op_ID,ReturnDateTime(OperationStartAt),"G"+GroupFinder(group),totalCycle,'L');
+      digitalWrite(Alarm,LOW);
       SaveOperationID(Op_ID);
+      OperationState = 3;
     }
     vTaskDelay(10);
   }
   vTaskDelete(Motion_Handle);
 }
 
+void Alarm_Loop(void * parm){
+  
+  while (true)
+  {  
+    ledcWriteTone(0, 5000);
+    delay(1000);
+    ledcWriteTone(0, 0);
+    delay(1000);
+    vTaskDelay(10);
+  }
+  vTaskDelete(Alarm_Handle);
+}
 #endif

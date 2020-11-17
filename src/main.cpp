@@ -27,6 +27,7 @@
       Alarm :-
     
     AL = 5
+    SAL = 5
 
       RTC Module :-
 
@@ -55,6 +56,15 @@ void setup() {
 
   pinMode(MainLock,OUTPUT);
   pinMode(Alarm,OUTPUT);
+
+  CTS1.calibrate();
+  CTS2.calibrate();
+  CTS3.calibrate();
+  
+  // Configure BUZZER functionalities.
+  ledcSetup(3, 8000, 12);
+  // Attach BUZZER pin.
+  ledcAttachPin(SAlarm, 0);
 
   Serial.begin(9600);
 

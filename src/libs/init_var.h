@@ -8,6 +8,7 @@
 #endif
 
 #include "RTClib.h"
+#include "ACS712.h"
 
 /****************************************************************\
         -: Pin Map :-
@@ -64,6 +65,10 @@ size_t CT1 = 32;
 size_t CT2 = 33;
 size_t CT3 = 35;
 
+ACS712 CTS1(ACS712_20A, CT1);
+ACS712 CTS2(ACS712_20A, CT2);
+ACS712 CTS3(ACS712_20A, CT3);
+
 // Mottion Sensors 
 
 size_t MS1 = 34;
@@ -81,7 +86,7 @@ size_t RTC_SCL = 22;
 size_t MainLock = 18;
 
 // Alarm 
-
+size_t SAlarm = 19;
 size_t Alarm = 5;
 
 // wifi Settings
@@ -106,6 +111,7 @@ bool values2[3];
 SemaphoreHandle_t Motion_Detected;
 TaskHandle_t Motion_Handle;
 TaskHandle_t CT_Handle;
+TaskHandle_t Alarm_Handle;
 xTaskHandle RemoteHandler_t;
 
 
@@ -132,6 +138,13 @@ struct lampState_t
   int lm6;
 };
 
+struct CT_State_t
+{
+  int ct1;
+  int ct2;
+  int ct3;
+};
+
 int lastTime;
 Data_t OP_Zero;
 
@@ -150,6 +163,7 @@ unsigned long now = millis();
 unsigned long lastTrigger = 0;
 boolean startTimer = false;
 bool controller = false;
+String motionStatus;
 
 
 #endif

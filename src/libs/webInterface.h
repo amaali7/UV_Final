@@ -126,7 +126,7 @@ void Route(){
   });
 
   server.on("/op_state",HTTP_GET,[](AsyncWebServerRequest *request){
-    request->send(200, "text/plain", String(totalCycle)+":"+String(lastTime));
+    request->send(200, "text/plain", String(totalCycle)+":"+String(lastTime)+":"+motionStatus);
   });
   
    server.on("/stop_now", HTTP_GET, [] (AsyncWebServerRequest *request) {

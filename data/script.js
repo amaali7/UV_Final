@@ -143,16 +143,28 @@ function move() {
     fetch('/op_state').then(data=>{return data.text()}).then(res=>{
       keyss = res.split(':')
         pers = (keyss[0]/keyss[1])*100;
+        motionState = keyss[2];
         for (var i = 0; i < elements.length; i++) {
           
           elements[i].style.width=(pers+"%");
           
         }
-        if (pers == NaN) {
+        console.log(res);
+        if (keyss[0]== 0 && keyss[1] == 0) {
           document.getElementById("progress").innerHTML = "Connection fail !!";
+
         }
         else{
           document.getElementById("progress").innerHTML = Math.floor(pers)+"%";
+        }
+        if (keyss[2]== "motionDetected") {
+          document.getElementById("motionStatus").style.color = "red";
+          document.getElementById("motionStatus").innerHTML = "<h3>Motion Detected</h3>";
+
+        }
+        else{
+          document.getElementById("motionStatus").style.color = "white";
+          document.getElementById("motionStatus").innerHTML = "<h3>Operation Online</h3>";
         }
     })
   }
