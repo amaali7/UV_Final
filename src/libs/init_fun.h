@@ -242,6 +242,7 @@ void IRAM_ATTR detectsMovement() {
   {   
     Serial.println("TimeTrigger Updated .");
     lastTrigger = millis();
+    AlarmState = true;
   }
 }
 

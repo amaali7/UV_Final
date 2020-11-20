@@ -12,22 +12,18 @@
 void RemoteHandle(void* parameters){
   Data_t *parm = (Data_t*) parameters;
   totalCycle = 0;
-  // xSemaphoreTake( Motion_Detected, ( TickType_t ) portMAX_DELAY );
   vTaskSuspend(CT_Handle);
-  xSemaphoreGive( Motion_Detected );
   vTaskResume(Motion_Handle);
   attachInterrupt(digitalPinToInterrupt(MS1), detectsMovement, RISING);
   // attachInterrupt(digitalPinToInterrupt(MS2), detectsMovement, RISING);
   // attachInterrupt(digitalPinToInterrupt(MS3), detectsMovement, RISING);
-  // Serial.println("Current Gruop : G"+String(parm->group)+" Time Interval : "+String(parm->time)+" Alarm State : "+String(parm->alarm) );
-  if (parm->alarm)
-  {
-    vTaskResume(Alarm_Handle);
+  // if (parm->alarm)
+  // {
+    AlarmState = true;
     digitalWrite(Alarm,HIGH);
     delay(10000);
-    vTaskSuspend(Alarm_Handle);
-    ledcWriteTone(0, 0);
-  }
+    AlarmState = false;
+  // }
   bool firstState = true;
   Op_ID = ReadOpertionID()+1;
   
@@ -35,9 +31,8 @@ void RemoteHandle(void* parameters){
   { 
     if (firstState)
     {
-      // digitalWrite(MainLock,LOW);
-      GroupSwitch(parm->group,true);
-      
+      digitalWrite(MainLock,LOW);
+      GroupSwitch(parm->group,true);      
       firstState = false;
       OperationStartAt = rtc.now();
       Serial.println("First Time ^_^ ");
@@ -48,43 +43,26 @@ void RemoteHandle(void* parameters){
       totalCycle += 1;
       xSemaphoreGive( Motion_Detected );
       Serial.println("Cycle : "+String(totalCycle));
-      // if (bitRead(MainLock,3)==1)
-      // {
-      //   digitalWrite(MainLock,LOW);
-      // }
     }
-    else
-    {
-      // if (bitRead(MainLock,3)==0)
-      // {
-      //   digitalWrite(MainLock,HIGH);
-      // }
-
-       
-      Serial.println("Warnig Motion Detected ....");
-    }
-    vTaskDelay(10);
+    vTaskDelay(50);
   }
-  if (parm->alarm)
-  {
+  // if (parm->alarm)
+  // {
     digitalWrite(Alarm,LOW);
-  }
+  // }
   GroupSwitch(parm->group,false);
   digitalWrite(MainLock,LOW);
   motionStatus = "motionStop";
-  // Serial.println("Operation Complete ^_^");
   SaveLog(Op_ID,ReturnDateTime(OperationStartAt),"G"+String(parm->group+1),totalCycle,'R');
   SaveOperationID(Op_ID);
   OperationOnline = false;
   detachInterrupt(digitalPinToInterrupt(MS1));
   // detachInterrupt(digitalPinToInterrupt(MS2));
   // detachInterrupt(digitalPinToInterrupt(MS3));
-  xSemaphoreTake( Motion_Detected, ( TickType_t ) portMAX_DELAY );
-  vTaskSuspend(Motion_Handle);
-  // vTaskResume(CT_Handle);
   xSemaphoreGive( Motion_Detected );
+  vTaskSuspend(Motion_Handle);
+  vTaskResume(CT_Handle);
   vTaskDelete(RemoteHandler_t);
-  
 }
 
 
@@ -98,7 +76,7 @@ void Motion_Loop(void * parm){
       {
         xSemaphoreTake( Motion_Detected, ( TickType_t ) portMAX_DELAY );
         digitalWrite(MainLock, HIGH);
-        vTaskResume(Alarm_Handle);
+        AlarmState = true;
         Serial.println("MOTION DETECTED interrpts Start");
         controller = false;
       }
@@ -108,21 +86,20 @@ void Motion_Loop(void * parm){
       digitalWrite(MainLock, LOW);
       startTimer = false;
       motionStatus = "motionStop";
-      vTaskSuspend(Alarm_Handle);
-      ledcWriteTone(0, 0);
+      AlarmState = false;
       xSemaphoreGive( Motion_Detected );
     }
-    vTaskDelay(10);
+    vTaskDelay(50);
   }
   vTaskDelete(Motion_Handle);
 }
 
 
 void CT_Loop(void * parameters){
-  int group[3] ;
-  // Operation State refare to start end wating
+  int group[3] ; 
   /*
-    
+    Operation State refare to start end wating
+
     start      = 0
     opertating = 1
     end        = 2
@@ -211,8 +188,9 @@ void CT_Loop(void * parameters){
       digitalWrite(Alarm,LOW);
       SaveOperationID(Op_ID);
       OperationState = 3;
+      totalCycle = 0;
     }
-    vTaskDelay(10);
+    vTaskDelay(50);
   }
   vTaskDelete(Motion_Handle);
 }
@@ -220,13 +198,15 @@ void CT_Loop(void * parameters){
 void Alarm_Loop(void * parm){
   
   while (true)
-  { 
-    delay(1000);
-    ledcWriteTone(0, 5000);
-    delay(1000);
-    ledcWriteTone(0, 0);
-    delay(1000);
-    vTaskDelay(10);
+  {
+    while (AlarmState)
+    { 
+      delay(100);
+      ledcWriteTone(0, 5000);
+      delay(100);
+      ledcWriteTone(0, 0);
+    }
+    vTaskDelay(50);
   }
   vTaskDelete(Alarm_Handle);
 }

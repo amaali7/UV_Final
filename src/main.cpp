@@ -27,7 +27,7 @@
       Alarm :-
     
     AL = 5
-    SAL = 5
+    SAL = 19
 
       RTC Module :-
 
@@ -62,7 +62,7 @@ void setup() {
   CTS3.calibrate();
   
   // Configure BUZZER functionalities.
-  ledcSetup(3, 8000, 12);
+  ledcSetup(0, 5000, 12);
   // Attach BUZZER pin.
   ledcAttachPin(SAlarm, 0);
 
@@ -89,9 +89,10 @@ void setup() {
 
   xTaskCreatePinnedToCore(CT_Loop, "CT Loop", 10000, NULL,2, &CT_Handle, 1);
   xTaskCreatePinnedToCore(Motion_Loop, "Motion Loop", 10000,NULL,2, &Motion_Handle, 1);
-  xTaskCreatePinnedToCore(Alarm_Loop, "Alarm Loop", 10000,NULL,2, &Alarm_Handle, 1);
-  
-  vTaskSuspend(Alarm_Handle);
+  xTaskCreatePinnedToCore(Alarm_Loop, "Alarm Loop", 10000,NULL,2, &Alarm_Handle, 0);
+
+  // vTaskSuspend(Alarm_Handle);
+  ledcWriteTone(0, 0);
   vTaskSuspend(Motion_Handle);
 
   Setup_Wifi(ssid, pass);

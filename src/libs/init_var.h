@@ -117,7 +117,7 @@ xTaskHandle RemoteHandler_t;
 
 const char* PARAM_INPUT_1 = "mode";
 const char* PARAM_INPUT_2 = "interval";
-const char* PARAM_INPUT_3 = "alarm";
+const char* PARAM_INPUT_3 = "type";
 
 bool OperationOnline;
 
@@ -125,7 +125,6 @@ struct Data_t
 {
   int group;
   int time;
-  bool alarm;
 };
 
 struct lampState_t
@@ -165,5 +164,5 @@ boolean startTimer = false;
 bool controller = false;
 String motionStatus;
 
-
+bool AlarmState = false;
 #endif

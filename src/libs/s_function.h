@@ -45,11 +45,11 @@ bool SinsorState(int Sinsor){
 }
 
 void KillSwitch(){
-  // xSemaphoreTake( Motion_Detected, ( TickType_t ) portMAX_DELAY );
   vTaskDelete(RemoteHandler_t);
+  xSemaphoreGive( Motion_Detected );
   vTaskSuspend(Motion_Handle);
-  
-  // xSemaphoreGive( Motion_Detected );
+  AlarmState = false;
+  digitalWrite(Alarm,LOW);
   detachInterrupt(digitalPinToInterrupt(MS1));
   // detachInterrupt(digitalPinToInterrupt(MS2));
   // detachInterrupt(digitalPinToInterrupt(MS3));
