@@ -33,11 +33,11 @@ bool CT_Sensor(size_t Sinsor, size_t tCycle){
 
 bool SinsorState(int Sinsor){
   bool state = true;
-  if (digitalRead(Sinsor) == HIGH)
+  if (digitalRead(Sinsor) == LOW)
   {
     state = true;
   }
-  else if (digitalRead(Sinsor) == LOW)
+  else if (digitalRead(Sinsor) == HIGH)
   {
     state = false;
   }
@@ -49,12 +49,12 @@ void KillSwitch(){
   xSemaphoreGive( Motion_Detected );
   vTaskSuspend(Motion_Handle);
   AlarmState = false;
-  digitalWrite(Alarm,LOW);
+  digitalWrite(Alarm,HIGH);
   detachInterrupt(digitalPinToInterrupt(MS1));
   // detachInterrupt(digitalPinToInterrupt(MS2));
   // detachInterrupt(digitalPinToInterrupt(MS3));
-  
-  digitalWrite(MainLock,LOW);
+
+  digitalWrite(MainLock,HIGH);
    if (OP_Zero.group == 1)
   {
     GroupSwitch(OP_Zero.group,false);
@@ -78,29 +78,29 @@ void CheckLampsLifeTime(){
   struct lampState_t GState = ReadLampState();
   if (GState.lm1>=4950)
   {
-    digitalWrite(Lamp1,HIGH);
+    digitalWrite(Lamp1,LOW);
   }
   if (GState.lm2>=4950)
   {
-    digitalWrite(Lamp2,HIGH);
+    digitalWrite(Lamp2,LOW);
   }
   if (GState.lm3>=4950)
   {
-    digitalWrite(Lamp3,HIGH);
+    digitalWrite(Lamp3,LOW);
   }
   if (GState.lm4>=4950)
   {
-    digitalWrite(Lamp4,HIGH);
+    digitalWrite(Lamp4,LOW);
   }
   if (GState.lm5>=4950)
   {
-    digitalWrite(Lamp5,HIGH);
+    digitalWrite(Lamp5,LOW);
   }
   if (GState.lm6>=4950)
   {
-    digitalWrite(Lamp6,HIGH);
+    digitalWrite(Lamp6,LOW);
   }
-  
+
 }
 
 

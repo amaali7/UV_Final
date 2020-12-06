@@ -10,6 +10,7 @@
 #include "RTClib.h"
 #include "ACS712.h"
 
+
 /****************************************************************\
         -: Pin Map :-
 
@@ -18,28 +19,29 @@
     l1 = 13 , l2 = 12 , l3 = 14 , l4 = 27 , l5 = 25 , l6 = 26
 
       Groups :-
-    
+
     G1 = 23 , G2 = 4 , G3 = 2
+
+      Motion Sensors :-
+
+    MS1 = 34 , MS2 = 39 , MS3 = 36
 
       CT Sensors :-
 
     CT1 = 32 , CT2 = 33 , CT3 = 35
 
       Main Lock :-
-    
+
     ML = 18
 
       Alarm :-
-    
-    AL = 5
 
-      Motion Sensors :-
-    
-    MS1 = 34 , MS2 = 39 , MS3 = 36
+    AL = 33
+    SAL = 19
 
       RTC Module :-
 
-    SDA = 21 , SCL = 22  
+    SDA = 21 , SCL = 22
 
 \*****************************************************************/
 
@@ -69,7 +71,7 @@ ACS712 CTS1(ACS712_20A, CT1);
 ACS712 CTS2(ACS712_20A, CT2);
 ACS712 CTS3(ACS712_20A, CT3);
 
-// Mottion Sensors 
+// Mottion Sensors
 
 size_t MS1 = 34;
 size_t MS2 = 39;
@@ -85,16 +87,16 @@ size_t RTC_SCL = 22;
 
 size_t MainLock = 18;
 
-// Alarm 
+// Alarm
 size_t SAlarm = 19;
-size_t Alarm = 5;
+size_t Alarm = 33;
 
 // wifi Settings
 
     // SSID network name
-char ssid[] = "Network-1";           
+char ssid[] = "Network-1";
     // Network Password
-char pass[] = "12345678"; 
+char pass[] = "12345678";
     // Server port
 size_t port = 80;
 

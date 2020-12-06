@@ -20,19 +20,19 @@ void RemoteHandle(void* parameters){
   // if (parm->alarm)
   // {
     AlarmState = true;
-    digitalWrite(Alarm,HIGH);
+    digitalWrite(Alarm,LOW);
     delay(10000);
     AlarmState = false;
   // }
   bool firstState = true;
   Op_ID = ReadOpertionID()+1;
-  
-  while ( parm->time > totalCycle)  
-  { 
+
+  while ( parm->time > totalCycle)
+  {
     if (firstState)
     {
-      digitalWrite(MainLock,LOW);
-      GroupSwitch(parm->group,true);      
+      digitalWrite(MainLock,HIGH);
+      GroupSwitch(parm->group,true);
       firstState = false;
       OperationStartAt = rtc.now();
       Serial.println("First Time ^_^ ");
@@ -48,10 +48,10 @@ void RemoteHandle(void* parameters){
   }
   // if (parm->alarm)
   // {
-    digitalWrite(Alarm,LOW);
+    digitalWrite(Alarm,HIGH);
   // }
   GroupSwitch(parm->group,false);
-  digitalWrite(MainLock,LOW);
+  digitalWrite(MainLock,HIGH);
   motionStatus = "motionStop";
   SaveLog(Op_ID,ReturnDateTime(OperationStartAt),"G"+String(parm->group+1),totalCycle,'R');
   SaveOperationID(Op_ID);
@@ -68,14 +68,14 @@ void RemoteHandle(void* parameters){
 
 
 void Motion_Loop(void * parm){
-  
+
   Serial.println("Mostion Sensor Opartional ");
   while (true)
-  {  
+  {
     if (controller)
       {
         xSemaphoreTake( Motion_Detected, ( TickType_t ) portMAX_DELAY );
-        digitalWrite(MainLock, HIGH);
+        digitalWrite(MainLock, LOW);
         AlarmState = true;
         Serial.println("MOTION DETECTED interrpts Start");
         controller = false;
@@ -83,7 +83,7 @@ void Motion_Loop(void * parm){
     now = millis();
     if(startTimer && (now - lastTrigger > (timeSeconds*1000))) {
       Serial.println("Motion stopped interrpts End");
-      digitalWrite(MainLock, LOW);
+      digitalWrite(MainLock, HIGH);
       startTimer = false;
       motionStatus = "motionStop";
       AlarmState = false;
@@ -96,7 +96,7 @@ void Motion_Loop(void * parm){
 
 
 void CT_Loop(void * parameters){
-  int group[3] ; 
+  int group[3] ;
   /*
     Operation State refare to start end wating
 
@@ -108,8 +108,8 @@ void CT_Loop(void * parameters){
   size_t watingTime = 0;
   size_t OperationState = 2;
   struct CT_State_t ct_cache;
-  while (true)  
-  { 
+  while (true)
+  {
     totalCycle = 0;
     // if current detected start operation
     ct_cache = CTS_State();
@@ -124,7 +124,7 @@ void CT_Loop(void * parameters){
       {
         group[0]=0;
       }
-      
+
       if (ct_cache.ct2 > 0)
       {
         group[1]=1;
@@ -144,20 +144,20 @@ void CT_Loop(void * parameters){
         group[2]=0;
       }
     }
-     
+
     if (OperationState == 0)
     {
       // group that detect current
-      digitalWrite(Alarm,HIGH);
+      digitalWrite(Alarm,LOW);
       OperationState = 1;
       Op_ID = ReadOpertionID()+1;
       OperationStartAt = rtc.now();
     }
-    
+
     while (OperationState == 1)
     {
       // delay(1000);
-      
+
       ct_cache = CTS_State();
       if (ct_cache.ct1 == 1 || ct_cache.ct2 == 1 || ct_cache.ct3 == 1 )
       {
@@ -185,7 +185,7 @@ void CT_Loop(void * parameters){
     if(OperationState == 2)
     {
       SaveLog(Op_ID,ReturnDateTime(OperationStartAt),"G"+GroupFinder(group),totalCycle,'L');
-      digitalWrite(Alarm,LOW);
+      digitalWrite(Alarm,HIGH);
       SaveOperationID(Op_ID);
       OperationState = 3;
       totalCycle = 0;
@@ -196,11 +196,11 @@ void CT_Loop(void * parameters){
 }
 
 void Alarm_Loop(void * parm){
-  
+
   while (true)
   {
     while (AlarmState)
-    { 
+    {
       delay(100);
       ledcWriteTone(0, 5000);
       delay(100);

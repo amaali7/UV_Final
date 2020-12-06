@@ -1,6 +1,4 @@
 #include <Arduino.h>
-
-
 #include "libs/webInterface.h"
 
 /****************************************************************\
@@ -63,6 +61,18 @@ void setup() {
   CTS2.calibrate();
   CTS3.calibrate();
 
+  digitalWrite(Lamp1,HIGH);
+  digitalWrite(Lamp2,HIGH);
+  digitalWrite(Lamp3,HIGH);
+  digitalWrite(Lamp4,HIGH);
+  digitalWrite(Lamp5,HIGH);
+  digitalWrite(Lamp6,HIGH);
+  digitalWrite(Group1,HIGH);
+  digitalWrite(Group2,HIGH);
+  digitalWrite(Group3,HIGH);
+  digitalWrite(MainLock,HIGH);
+  digitalWrite(Alarm,HIGH);
+
   // Configure BUZZER functionalities.
   ledcSetup(0, 5000, 12);
   // Attach BUZZER pin.
@@ -72,7 +82,7 @@ void setup() {
 
   if (! rtc.begin()) {
     Serial.println("Couldn't find RTC");
-    while (1);
+    // while (1);
   }
 
   if (rtc.lostPower()) {
