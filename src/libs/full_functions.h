@@ -62,7 +62,7 @@ void RemoteHandle(void* parameters){
   xSemaphoreGive( Motion_Detected );
   vTaskSuspend(Motion_Handle);
   vTaskResume(CT_Handle);
-  ESP.restart();
+  // ESP.restart();
   vTaskDelete(RemoteHandler_t);
 }
 
