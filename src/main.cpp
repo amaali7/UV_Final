@@ -26,7 +26,7 @@
 
       Alarm :-
 
-    AL = 5
+    AL = 33
     SAL = 19
 
       RTC Module :-

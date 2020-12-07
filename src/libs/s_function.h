@@ -72,6 +72,7 @@ void KillSwitch(){
   SaveLog(Op_ID,ReturnDateTime(OperationStartAt),"G"+String(OP_Zero.group),totalCycle,'R');
   SaveOperationID(Op_ID);
   motionStatus = "motionStop";
+  ESP.restart();
 }
 
 void CheckLampsLifeTime(){
