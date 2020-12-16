@@ -238,12 +238,12 @@ void IRAM_ATTR detectsMovement() {
     motionStatus = "motionDetected";
     lastTrigger = millis();
   }
-  else
-  {
-    Serial.println("TimeTrigger Updated .");
-    lastTrigger = millis();
-    AlarmState = true;
-  }
+  // else
+  // {
+  //   Serial.println("TimeTrigger Updated .");
+  //   lastTrigger = millis();
+  //   AlarmState = true;
+  // }
 }
 
 // struct CT_State_t CTS_State(){

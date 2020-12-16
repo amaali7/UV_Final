@@ -14,8 +14,8 @@ void RemoteHandle(void* parameters){
   totalCycle = 0;
   OperationOnline = true;
   // vTaskSuspend(CT_Handle);
-  // vTaskResume(Motion_Handle);
-  // attachInterrupt(digitalPinToInterrupt(MS1), detectsMovement, RISING);
+  vTaskResume(Motion_Handle);
+  attachInterrupt(digitalPinToInterrupt(MS1), detectsMovement, RISING);
   // attachInterrupt(digitalPinToInterrupt(MS2), detectsMovement, RISING);
   // attachInterrupt(digitalPinToInterrupt(MS3), detectsMovement, RISING);
   AlarmState = true;
@@ -52,11 +52,11 @@ void RemoteHandle(void* parameters){
   SaveLog(Op_ID,ReturnDateTime(OperationStartAt),"G"+String(parm->group+1),totalCycle,'R');
   SaveOperationID(Op_ID);
   OperationOnline = false;
-  // detachInterrupt(digitalPinToInterrupt(MS1));
+  detachInterrupt(digitalPinToInterrupt(MS1));
   // detachInterrupt(digitalPinToInterrupt(MS2));
   // detachInterrupt(digitalPinToInterrupt(MS3));
   xSemaphoreGive( Motion_Detected );
-  // vTaskSuspend(Motion_Handle);
+  vTaskSuspend(Motion_Handle);
   // vTaskResume(CT_Handle);
   vTaskDelete(RemoteHandler_t);
 }

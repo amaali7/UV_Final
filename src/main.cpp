@@ -100,7 +100,7 @@ void setup() {
   Motion_Detected = xSemaphoreCreateMutex();
 
   // xTaskCreatePinnedToCore(CT_Loop, "CT Loop", 10000, NULL,2, &CT_Handle, 1);
-  // xTaskCreatePinnedToCore(Motion_Loop, "Motion Loop", 10000,NULL,2, &Motion_Handle, 1);
+  xTaskCreatePinnedToCore(Motion_Loop, "Motion Loop", 10000,NULL,2, &Motion_Handle, 1);
   xTaskCreatePinnedToCore(Alarm_Loop, "Alarm Loop", 10000,NULL,2, &Alarm_Handle, 0);
 
   // vTaskSuspend(Alarm_Handle);

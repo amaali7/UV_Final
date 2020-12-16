@@ -46,7 +46,7 @@ bool SinsorState(int Sinsor){
 
 void KillSwitch(){
   
-  // vTaskSuspend(Motion_Handle);
+  vTaskSuspend(Motion_Handle);
   AlarmState = false;
   digitalWrite(Alarm,HIGH);
   // detachInterrupt(digitalPinToInterrupt(MS1));
