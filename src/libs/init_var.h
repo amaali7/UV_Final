@@ -61,15 +61,15 @@ size_t Group1 = 23;
 size_t Group2 = 4;
 size_t Group3 = 2;
 
-// Current Sensors
+// // Current Sensors
 
-size_t CT1 = 32;
-size_t CT2 = 33;
-size_t CT3 = 35;
+// size_t CT1 = 32;
+// size_t CT2 = 33;
+// size_t CT3 = 35;
 
-ACS712 CTS1(ACS712_20A, CT1);
-ACS712 CTS2(ACS712_20A, CT2);
-ACS712 CTS3(ACS712_20A, CT3);
+// ACS712 CTS1(ACS712_20A, CT1);
+// ACS712 CTS2(ACS712_20A, CT2);
+// ACS712 CTS3(ACS712_20A, CT3);
 
 // Mottion Sensors
 
@@ -89,7 +89,7 @@ size_t MainLock = 18;
 
 // Alarm
 size_t SAlarm = 19;
-size_t Alarm = 33;
+size_t Alarm = 5;
 
 // wifi Settings
 

@@ -45,12 +45,11 @@ bool SinsorState(int Sinsor){
 }
 
 void KillSwitch(){
-  vTaskDelete(RemoteHandler_t);
-  xSemaphoreGive( Motion_Detected );
-  vTaskSuspend(Motion_Handle);
+  
+  // vTaskSuspend(Motion_Handle);
   AlarmState = false;
   digitalWrite(Alarm,HIGH);
-  detachInterrupt(digitalPinToInterrupt(MS1));
+  // detachInterrupt(digitalPinToInterrupt(MS1));
   // detachInterrupt(digitalPinToInterrupt(MS2));
   // detachInterrupt(digitalPinToInterrupt(MS3));
 
@@ -67,12 +66,12 @@ void KillSwitch(){
   {
     GroupSwitch(OP_Zero.group,false);
   }
-  vTaskResume(CT_Handle);
+  // vTaskResume(CT_Handle);
   OperationOnline = false;
   SaveLog(Op_ID,ReturnDateTime(OperationStartAt),"G"+String(OP_Zero.group),totalCycle,'R');
   SaveOperationID(Op_ID);
   motionStatus = "motionStop";
-  // ESP.restart();
+  vTaskDelete(RemoteHandler_t);
 }
 
 void CheckLampsLifeTime(){

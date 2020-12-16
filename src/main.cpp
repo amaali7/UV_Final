@@ -50,16 +50,16 @@ void setup() {
   pinMode(Lamp5,OUTPUT);
   pinMode(Lamp6,OUTPUT);
 
-  pinMode(MS1,INPUT_PULLUP);
-  pinMode(MS2,INPUT_PULLUP);
-  pinMode(MS3,INPUT_PULLUP);
+  // pinMode(MS1,INPUT_PULLUP);
+  // pinMode(MS2,INPUT_PULLUP);
+  // pinMode(MS3,INPUT_PULLUP);
 
   pinMode(MainLock,OUTPUT);
   pinMode(Alarm,OUTPUT);
 
-  CTS1.calibrate();
-  CTS2.calibrate();
-  CTS3.calibrate();
+  // CTS1.calibrate();
+  // CTS2.calibrate();
+  // CTS3.calibrate();
 
   digitalWrite(Lamp1,HIGH);
   digitalWrite(Lamp2,HIGH);
@@ -99,13 +99,13 @@ void setup() {
   CheckLampsLifeTime();
   Motion_Detected = xSemaphoreCreateMutex();
 
-  xTaskCreatePinnedToCore(CT_Loop, "CT Loop", 10000, NULL,2, &CT_Handle, 1);
-  xTaskCreatePinnedToCore(Motion_Loop, "Motion Loop", 10000,NULL,2, &Motion_Handle, 1);
+  // xTaskCreatePinnedToCore(CT_Loop, "CT Loop", 10000, NULL,2, &CT_Handle, 1);
+  // xTaskCreatePinnedToCore(Motion_Loop, "Motion Loop", 10000,NULL,2, &Motion_Handle, 1);
   xTaskCreatePinnedToCore(Alarm_Loop, "Alarm Loop", 10000,NULL,2, &Alarm_Handle, 0);
 
   // vTaskSuspend(Alarm_Handle);
   ledcWriteTone(0, 0);
-  vTaskSuspend(Motion_Handle);
+  // vTaskSuspend(Motion_Handle);
 
   Setup_Wifi(ssid, pass);
   Route();

@@ -12,18 +12,16 @@
 void RemoteHandle(void* parameters){
   Data_t *parm = (Data_t*) parameters;
   totalCycle = 0;
-  vTaskSuspend(CT_Handle);
-  vTaskResume(Motion_Handle);
-  attachInterrupt(digitalPinToInterrupt(MS1), detectsMovement, RISING);
+  OperationOnline = true;
+  // vTaskSuspend(CT_Handle);
+  // vTaskResume(Motion_Handle);
+  // attachInterrupt(digitalPinToInterrupt(MS1), detectsMovement, RISING);
   // attachInterrupt(digitalPinToInterrupt(MS2), detectsMovement, RISING);
   // attachInterrupt(digitalPinToInterrupt(MS3), detectsMovement, RISING);
-  // if (parm->alarm)
-  // {
-    AlarmState = true;
-    digitalWrite(Alarm,LOW);
-    delay(10000);
-    AlarmState = false;
-  // }
+  AlarmState = true;
+  digitalWrite(Alarm,LOW);
+  delay(10000);
+  AlarmState = false;
   bool firstState = true;
   Op_ID = ReadOpertionID()+1;
 
@@ -32,6 +30,7 @@ void RemoteHandle(void* parameters){
     if (firstState)
     {
       digitalWrite(MainLock,HIGH);
+      xSemaphoreGive( Motion_Detected );
       GroupSwitch(parm->group,true);
       firstState = false;
       OperationStartAt = rtc.now();
@@ -46,23 +45,19 @@ void RemoteHandle(void* parameters){
     }
     vTaskDelay(50);
   }
-  // if (parm->alarm)
-  // {
-    digitalWrite(Alarm,HIGH);
-  // }
+  digitalWrite(Alarm,HIGH);
   GroupSwitch(parm->group,false);
   digitalWrite(MainLock,HIGH);
   motionStatus = "motionStop";
   SaveLog(Op_ID,ReturnDateTime(OperationStartAt),"G"+String(parm->group+1),totalCycle,'R');
   SaveOperationID(Op_ID);
   OperationOnline = false;
-  detachInterrupt(digitalPinToInterrupt(MS1));
+  // detachInterrupt(digitalPinToInterrupt(MS1));
   // detachInterrupt(digitalPinToInterrupt(MS2));
   // detachInterrupt(digitalPinToInterrupt(MS3));
   xSemaphoreGive( Motion_Detected );
-  vTaskSuspend(Motion_Handle);
-  vTaskResume(CT_Handle);
-  // ESP.restart();
+  // vTaskSuspend(Motion_Handle);
+  // vTaskResume(CT_Handle);
   vTaskDelete(RemoteHandler_t);
 }
 
@@ -96,105 +91,105 @@ void Motion_Loop(void * parm){
 }
 
 
-void CT_Loop(void * parameters){
-  int group[3] ;
-  /*
-    Operation State refare to start end wating
+// void CT_Loop(void * parameters){
+//   int group[3] ;
+//   /*
+//     Operation State refare to start end wating
 
-    start      = 0
-    opertating = 1
-    end        = 2
-    wating     = 3
-  */
-  size_t watingTime = 0;
-  size_t OperationState = 2;
-  struct CT_State_t ct_cache;
-  while (true)
-  {
-    totalCycle = 0;
-    // if current detected start operation
-    ct_cache = CTS_State();
-    if (ct_cache.ct1 == 1 || ct_cache.ct2 == 1 || ct_cache.ct3 == 1 )
-    {
-      if (ct_cache.ct1 > 0)
-      {
-        group[0]=1;
-        OperationState = 0;
-      }
-      else
-      {
-        group[0]=0;
-      }
+//     start      = 0
+//     opertating = 1
+//     end        = 2
+//     wating     = 3
+//   */
+//   size_t watingTime = 0;
+//   size_t OperationState = 2;
+//   struct CT_State_t ct_cache;
+//   while (true)
+//   {
+//     totalCycle = 0;
+//     // if current detected start operation
+//     ct_cache = CTS_State();
+//     if (ct_cache.ct1 == 1 || ct_cache.ct2 == 1 || ct_cache.ct3 == 1 )
+//     {
+//       if (ct_cache.ct1 > 0)
+//       {
+//         group[0]=1;
+//         OperationState = 0;
+//       }
+//       else
+//       {
+//         group[0]=0;
+//       }
 
-      if (ct_cache.ct2 > 0)
-      {
-        group[1]=1;
-        OperationState = 0;
-      }
-      else
-      {
-        group[1]=0;
-      }
-      if (ct_cache.ct3 > 0)
-      {
-        group[2]=1;
-        OperationState = 0;
-      }
-      else
-      {
-        group[2]=0;
-      }
-    }
+//       if (ct_cache.ct2 > 0)
+//       {
+//         group[1]=1;
+//         OperationState = 0;
+//       }
+//       else
+//       {
+//         group[1]=0;
+//       }
+//       if (ct_cache.ct3 > 0)
+//       {
+//         group[2]=1;
+//         OperationState = 0;
+//       }
+//       else
+//       {
+//         group[2]=0;
+//       }
+//     }
 
-    if (OperationState == 0)
-    {
-      // group that detect current
-      digitalWrite(Alarm,LOW);
-      OperationState = 1;
-      Op_ID = ReadOpertionID()+1;
-      OperationStartAt = rtc.now();
-    }
+//     if (OperationState == 0)
+//     {
+//       // group that detect current
+//       digitalWrite(Alarm,LOW);
+//       OperationState = 1;
+//       Op_ID = ReadOpertionID()+1;
+//       OperationStartAt = rtc.now();
+//     }
 
-    while (OperationState == 1)
-    {
-      // delay(1000);
+//     while (OperationState == 1)
+//     {
+//       // delay(1000);
 
-      ct_cache = CTS_State();
-      if (ct_cache.ct1 == 1 || ct_cache.ct2 == 1 || ct_cache.ct3 == 1 )
-      {
-        if( xSemaphoreTake( Motion_Detected, ( TickType_t ) portMAX_DELAY ) == pdTRUE )
-        {
-          delay(1000);
-          ++totalCycle;
-          xSemaphoreGive( Motion_Detected );
-          watingTime = 0;
-        }
-      }
-      else
-      {
-        // OperationState = 1;
-        delay(1000);
-        ++watingTime;
-      }
-      if (watingTime > 5)
-      {
-        break;
-        OperationState  = 2;
-      }
+//       ct_cache = CTS_State();
+//       if (ct_cache.ct1 == 1 || ct_cache.ct2 == 1 || ct_cache.ct3 == 1 )
+//       {
+//         if( xSemaphoreTake( Motion_Detected, ( TickType_t ) portMAX_DELAY ) == pdTRUE )
+//         {
+//           delay(1000);
+//           ++totalCycle;
+//           xSemaphoreGive( Motion_Detected );
+//           watingTime = 0;
+//         }
+//       }
+//       else
+//       {
+//         // OperationState = 1;
+//         delay(1000);
+//         ++watingTime;
+//       }
+//       if (watingTime > 5)
+//       {
+//         break;
+//         OperationState  = 2;
+//       }
 
-    }
-    if(OperationState == 2)
-    {
-      SaveLog(Op_ID,ReturnDateTime(OperationStartAt),"G"+GroupFinder(group),totalCycle,'L');
-      digitalWrite(Alarm,HIGH);
-      SaveOperationID(Op_ID);
-      OperationState = 3;
-      totalCycle = 0;
-    }
-    vTaskDelay(50);
-  }
-  vTaskDelete(Motion_Handle);
-}
+//     }
+//     if(OperationState == 2)
+//     {
+//       SaveLog(Op_ID,ReturnDateTime(OperationStartAt),"G"+GroupFinder(group),totalCycle,'L');
+//       digitalWrite(Alarm,HIGH);
+//       SaveOperationID(Op_ID);
+//       OperationState = 3;
+//       totalCycle = 0;
+//     }
+//     vTaskDelay(50);
+//   }
+//   vTaskDelete(Motion_Handle);
+// }
 
 void Alarm_Loop(void * parm){
 

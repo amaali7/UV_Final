@@ -246,13 +246,13 @@ void IRAM_ATTR detectsMovement() {
   }
 }
 
-struct CT_State_t CTS_State(){
-  struct CT_State_t tempo;
-  tempo.ct1 = int(CTS1.getCurrentAC(60));
-  tempo.ct2 = int(CTS2.getCurrentAC(60));
-  tempo.ct3 = int(CTS3.getCurrentAC(60));
-  return tempo;
-}
+// struct CT_State_t CTS_State(){
+//   struct CT_State_t tempo;
+//   tempo.ct1 = int(CTS1.getCurrentAC(60));
+//   tempo.ct2 = int(CTS2.getCurrentAC(60));
+//   tempo.ct3 = int(CTS3.getCurrentAC(60));
+//   return tempo;
+// }
 
 String GroupFinder(int Groups[3]){
   String data = "";
