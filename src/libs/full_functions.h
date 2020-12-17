@@ -197,9 +197,9 @@ void Alarm_Loop(void * parm){
   {
     while (AlarmState)
     {
-      delay(100);
+      delay(200);
       ledcWriteTone(0, 5000);
-      delay(100);
+      delay(200);
       ledcWriteTone(0, 0);
     }
     vTaskDelay(50);

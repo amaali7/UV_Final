@@ -160,7 +160,8 @@ DateTime OperationStartAt;
 #define timeSeconds 10
 
 // Timer: Auxiliary variables
-unsigned long now = millis();
+unsigned long now;
+unsigned long snow;
 unsigned long lastTrigger = 0;
 boolean startTimer = false;
 bool controller = false;

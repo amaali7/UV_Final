@@ -50,7 +50,7 @@ void setup() {
   pinMode(Lamp5,OUTPUT);
   pinMode(Lamp6,OUTPUT);
 
-  // pinMode(MS1,INPUT_PULLUP);
+  pinMode(MS1,INPUT_PULLUP);
   // pinMode(MS2,INPUT_PULLUP);
   // pinMode(MS3,INPUT_PULLUP);
 

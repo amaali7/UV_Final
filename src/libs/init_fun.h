@@ -232,18 +232,22 @@ void GroupSwitch(size_t group, bool state){
 
 // Checks if motion was detected, sets LED LOW and starts a timer
 void IRAM_ATTR detectsMovement() {
+  snow = millis();
   if(!startTimer ) {
     startTimer = true;
     controller = true;
     motionStatus = "motionDetected";
     lastTrigger = millis();
   }
-  // else
-  // {
-  //   Serial.println("TimeTrigger Updated .");
-  //   lastTrigger = millis();
-  //   AlarmState = true;
-  // }
+  else if(startTimer && (snow - lastTrigger > (timeSeconds*100))) {
+
+  }
+  else
+  {
+    Serial.println("TimeTrigger Updated .");
+    lastTrigger = millis();
+    AlarmState = true;
+  }
 }
 
 // struct CT_State_t CTS_State(){
