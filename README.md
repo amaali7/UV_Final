@@ -32,3 +32,5 @@
     SDA = 21 , SCL = 22  
 
 \*****************************************************************/
+
+[Python part]( https://github.com/amaali7/PythonSerialSmsTest)
